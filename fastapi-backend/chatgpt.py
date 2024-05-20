@@ -9,16 +9,17 @@ config.read('config.ini')
 
 router = APIRouter()
 
+
 class ChatRequest(BaseModel):
     prompt: str
+
 
 @router.post("/chat")
 async def chat(request: ChatRequest):
     openai.api_key = config.get('KEY', 'OPENAI_API_KEY')
     try:
         response = openai.Completion.create(
-            model='gpt-4o'
-            engine="text-davinci-003",
+            model='gpt-4o',
             prompt=request.prompt,
             max_tokens=256
         )
