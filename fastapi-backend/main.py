@@ -8,7 +8,7 @@ import os
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",  # Add your Svelte front end URL here
+    "http://localhost:5173",  # Add your Svelte front end URL here
     "http://dev.thothclock.com", # You can add more origins as needed
 ]
 

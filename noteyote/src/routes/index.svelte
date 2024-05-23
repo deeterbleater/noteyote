@@ -1,14 +1,8 @@
 <script lang="ts">
-  import DraggableWindow from '../lib/DraggableWindow.svelte';
-  import api from '../lib/api';
-  import { notebooks, startNotebook, stopNotebooks } from '../stores/notebook';
+  import DraggableWindow from '$lib/DraggableWindow.svelte';
+  import { notebooks, startNotebook, stopNotebooks } from '$stores/notebook';
 
-  interface Notebook {
-    id: string;
-    url: string;
-  }
-
-  let notebookList: Notebook[] = [];
+  let notebookList: { id: string; url: string }[] = [];
   notebooks.subscribe(value => notebookList = value);
 
   async function handleStartNotebook() {
