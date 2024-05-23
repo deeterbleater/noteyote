@@ -1,34 +1,52 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import api from './api';
+  import DraggableWindow from '../lib/DraggableWindow.svelte';
+  import api from '../lib/api';
+  import { notebooks, startNotebook, stopNotebooks } from '../stores/notebook';
 
-  let items: any[] = [];
-  let itemId: number; // Explicitly define the type for itemId
+  interface Notebook {
+    id: string;
+    url: string;
+  }
 
-  onMount(async () => {
+  let notebookList: Notebook[] = [];
+  notebooks.subscribe(value => notebookList = value);
+
+  async function handleStartNotebook() {
     try {
-      const response = await api.getItems();
-      items = response.data;
+      await startNotebook();
     } catch (error) {
-      console.error('Error fetching items:', error);
+      console.error('Error starting notebook:', error);
     }
-  });
+  }
 
-  async function fetchItem(itemId: number) { // Explicitly define the type for itemId
+  async function handleStopNotebooks() {
     try {
-      const response = await api.getItem({itemId: itemId});
-      console.log('Fetched item:', response.data);
+      await stopNotebooks();
     } catch (error) {
-      console.error('Error fetching item:', error);
+      console.error('Error stopping notebooks:', error);
     }
   }
 </script>
 
-<main>
-  <h1>Items</h1>
-  <ul>
-    {#each items as item}
-      <li>{item.item_id}: {item.q}</li>
-    {/each}
-  </ul>
-</main>
+<button on:click={handleStartNotebook}>Start Notebook</button>
+<button on:click={handleStopNotebooks}>Stop All Notebooks</button>
+
+{#each notebookList as notebook (notebook.id)}
+  <DraggableWindow>
+    <iframe src={notebook.url} width="100%" height="100%"></iframe>
+  </DraggableWindow>
+{/each}
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  :global(html, body) {
+    width: 100%;
+    height: 100%;
+    background-color: #f0f0f0;
+  }
+</style>
