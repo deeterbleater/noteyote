@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import users
 import auth
+import subprocess
+import os
 
 app = FastAPI()
 
@@ -29,3 +31,13 @@ def read_rood():
 @app.get("/items/{item_id}")
 async def read_item(item_id: int, q: str = None):
     return {"item_id": item_id, "q": q}
+
+@app.post("/notebooks/start")
+def start_notebook():
+    subprocess.Popen(["jupyter", "notebook"])
+    return {"message": "Jupyter Notebook started"}
+
+@app.post("/notebooks/stop")
+def stop_notebook():
+    os.system("pkill -f jupyter-notebook")
+    return {"message": "Jupyter Notebook stopped"}
